@@ -133,11 +133,13 @@ open class LBXScanViewController: UIViewController {
         }
         
         if let result = arrayResult.first {
-            if let continues = delegate.scanner(controller: self, didFinish: result) {
+            let continues = delegate.scanner(controller: self, didFinish: result)
+            if continues {
                 qRScanView?.startScanAnimation()
             }
         } else {
-            if let continues = delegate.scanner(controller: self, didFailed: "no scan result") {
+            let continues = delegate.scanner(controller: self, didFailed: "no scan result")
+            if continues {
                 qRScanView?.startScanAnimation()
             }
         }
