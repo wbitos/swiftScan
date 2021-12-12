@@ -11,7 +11,9 @@ import Foundation
 import AVFoundation
 
 public protocol LBXScanViewControllerDelegate: class {
-     func scanFinished(scanResult: LBXScanResult, error: String?)
+     func scanner(controller: LBXScanViewController, didFinish withResult: LBXScanResult) -> Bool
+    func scanner(controller: LBXScanViewController, didFailed withError: String?) -> Bool
+
 }
 
 public protocol QRRectDelegate {
@@ -131,16 +133,14 @@ open class LBXScanViewController: UIViewController {
             fatalError("you must set scanResultDelegate or override this method without super keyword")
         }
         
-        if !isSupportContinuous {
-            navigationController?.popViewController(animated: true)
-
-        }
-        
         if let result = arrayResult.first {
-            delegate.scanFinished(scanResult: result, error: nil)
+            if let continues = delegate.scanner(controller: self, didFinish: result) {
+                qRScanView?.startScanAnimation()
+            }
         } else {
-            let result = LBXScanResult(str: nil, img: nil, barCodeType: nil, corner: nil)
-            delegate.scanFinished(scanResult: result, error: "no scan result")
+            if let continues = delegate.scanner(controller: self, didFailed: "no scan result") {
+                qRScanView?.startScanAnimation()
+            }
         }
     }
     

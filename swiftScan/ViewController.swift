@@ -414,20 +414,22 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.navigationController?.pushViewController(vc, animated: true)
     }
 
-    func scanFinished(scanResult: LBXScanResult, error: String?) {
-        NSLog("scanResult:\(scanResult)")
-        
-        
-        
+    func scanner(controller: LBXScanViewController, didFailed withError: String?) -> Bool {
+        NSLog("scan failed:\(withError)")
+        return true
+    }
+    
+    func scanner(controller: LBXScanViewController, didFinish withResult: LBXScanResult, error: String?) {
+        NSLog("scanResult:\(withResult.strScanned)")
         if !isSupportContinuous {
             
             DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(400)) {
                 let vc = ScanResultController()
-                vc.codeResult = scanResult
+                vc.codeResult = controller: LBXScanViewController, didFinish withResult:
                 self.navigationController?.pushViewController(vc, animated: true)
             }
         }
-        
+        return true
     }
 
 }
