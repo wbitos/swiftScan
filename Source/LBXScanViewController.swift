@@ -131,16 +131,19 @@ open class LBXScanViewController: UIViewController {
         guard let delegate = scanResultDelegate else {
             fatalError("you must set scanResultDelegate or override this method without super keyword")
         }
-        
+        var continues = false
         if let result = arrayResult.first {
-            let continues = delegate.scanner(controller: self, didFinish: result)
-            if continues {
-                qRScanView?.startScanAnimation()
-            }
+            continues = delegate.scanner(controller: self, didFinish: result)
+            
         } else {
-            let continues = delegate.scanner(controller: self, didFailed: "no scan result")
-            if continues {
-                qRScanView?.startScanAnimation()
+            continues = delegate.scanner(controller: self, didFailed: "no scan result")
+        }
+        if continues {
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.25) { [weak self]() -> Void in
+                guard let strong = self else {
+                    return
+                }
+                strong.qRScanView?.startScanAnimation()
             }
         }
     }
