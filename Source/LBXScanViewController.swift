@@ -139,11 +139,12 @@ open class LBXScanViewController: UIViewController {
             continues = delegate.scanner(controller: self, didFailed: "no scan result")
         }
         if continues {
+            self.scanObj?.stop()
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.25) { [weak self]() -> Void in
                 guard let strong = self else {
                     return
                 }
-                strong.qRScanView?.startScanAnimation()
+                strong.startScan()
             }
         }
     }
